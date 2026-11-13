@@ -29,7 +29,7 @@ python manage.py load_test_data
 python manage.py runserver
 ```
 
-Abre `http://127.0.0.1:8000/login/` para iniciar sesión. La ruta raíz redirige al panel correspondiente al rol; el menú muestra el usuario conectado y su rol. La sesión expira tras 30 minutos de inactividad.
+Abre `http://127.0.0.1:8000/login/` para iniciar sesión. La ruta raíz redirige al panel correspondiente al rol; el menú muestra el usuario conectado y su rol. La sesión expira tras 30 minutos de inactividad. El catálogo del cliente permite buscar por nombre y filtrar por categoría activa; muestra precios en CLP y marca como agotados los productos sin stock.
 
 El encargado también puede entrar al panel de Django Admin desde el enlace del menú o en `http://127.0.0.1:8000/admin/`. Los clientes no pueden acceder a las rutas reservadas al encargado. El comando de datos de prueba se puede volver a ejecutar sin duplicar categorías ni productos.
 
@@ -47,4 +47,4 @@ Son credenciales públicas de demostración; no deben reutilizarse fuera de una 
 
 ## Alcance del avance
 
-El proyecto está en desarrollo. Las funciones de navegación de menú y creación de pedidos para clientes aún no están implementadas en este avance. No usar la configuración actual para desplegar en producción.
+El proyecto está en desarrollo. El cliente no puede agregar productos agotados al carrito; el flujo de confirmación de pedidos y retiro se abordará en un requerimiento posterior. No usar la configuración actual para desplegar en producción.

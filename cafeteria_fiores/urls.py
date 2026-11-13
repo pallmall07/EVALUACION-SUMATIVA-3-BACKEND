@@ -11,4 +11,9 @@ urlpatterns = [
     path('', auth_views.home, name='home'),
     path('encargado/', auth_views.staff_dashboard, name='staff_dashboard'),
     path('cliente/', auth_views.client_dashboard, name='client_dashboard'),
+    path(
+        'cliente/carrito/agregar/<int:product_id>/',
+        auth_views.add_to_cart,
+        name='add_to_cart',
+    ),
 ]

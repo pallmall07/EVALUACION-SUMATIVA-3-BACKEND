@@ -1,11 +1,53 @@
 {% extends "orders/base.html" %}
+{% load clp %}
 
-{% block title %}Panel cliente | Cafetería Fiores{% endblock %}
+{% block title %}Catálogo | Cafetería Fiores{% endblock %}
 
 {% block content %}
-<section class="dashboard-intro">
-    <p class="eyebrow">ÁREA DE CLIENTE</p>
-    <h1>Hola, {{ user.first_name|default:user.username }}</h1>
-    <p>Tu cuenta tiene permisos de cliente.</p>
+<section class="catalog-page" id="catalogo">
+    <div class="catalog-heading">
+        <p class="eyebrow">CAFETERÍA FIORES · MENÚ</p>
+        <h1>Hola, {{ user.first_name|default:user.username }}</h1>
+    </div>
+
+    <form class="catalog-filters" method="get" action="{% url 'client_dashboard' %}">
+        <div class="filter-field search-field">
+            <label for="search-products">Buscar producto</label>
+            <input id="search-products" type="search" name="q" value="{{ search }}" placeholder="Nombre del producto">
+        </div>
+        <div class="filter-field">
+            <label for="category-filter">Categoría</label>
+            <select id="category-filter" name="category">
+                <option value="">Todas las categorías</option>
+                {% for category in categories %}
+                    <option value="{{ category.pk }}" {% if category.pk|stringformat:'s' == selected_category %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="primary-button filter-button" type="submit">Buscar</button>
+        <a class="clear-filter" href="{% url 'client_dashboard' %}">Limpiar</a>
+    </form>
+
+    <div class="product-grid">
+        {% for product in products %}
+            <article class="product-item">
+                <div class="product-copy">
+                    <p class="product-category">{{ product.category.name }} · {{ product.code }}</p>
+                    <h2>{{ product.name }}</h2>
+                    <p class="product-price">{{ product.price|clp }}</p>
+                </div>
+                {% if product.stock > 0 %}
+                    <form action="{% url 'add_to_cart' product.pk %}" method="post">
+                        {% csrf_token %}
+                        <button class="add-button" type="submit">Agregar</button>
+                    </form>
+                {% else %}
+                    <span class="out-of-stock" aria-label="Producto agotado">Agotado</span>
+                {% endif %}
+            </article>
+        {% empty %}
+            <p class="empty-catalog">No hay productos que coincidan con la búsqueda.</p>
+        {% endfor %}
+    </div>
 </section>
 {% endblock %}

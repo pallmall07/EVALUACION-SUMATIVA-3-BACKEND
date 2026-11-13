@@ -108,3 +108,72 @@ class AuthenticationAndRoleTest(TestCase):
     def test_session_expires_after_thirty_minutes_of_inactivity(self):
         self.assertEqual(settings.SESSION_COOKIE_AGE, 30 * 60)
         self.assertTrue(settings.SESSION_SAVE_EVERY_REQUEST)
+
+
+class ProductCatalogTest(TestCase):
+    def setUp(self):
+        customer = User.objects.create_user(username='catalogo', password='test-pass-123')
+        self.client.force_login(customer)
+        self.beverages = Category.objects.create(name='Bebidas', active=True)
+        self.snacks = Category.objects.create(name='Snacks', active=True)
+        inactive_category = Category.objects.create(name='Temporal', active=False)
+        self.in_stock = Product.objects.create(
+            code='BEB101', name='Espresso', price=1500, stock=5, category=self.beverages,
+        )
+        self.sold_out = Product.objects.create(
+            code='BEB102', name='Jugo agotado', price=1200, stock=0, category=self.beverages,
+        )
+        Product.objects.create(
+            code='SNK101', name='Brownie', price=950, stock=8, category=self.snacks,
+        )
+        Product.objects.create(
+            code='SNK102', name='Producto oculto', price=1000, stock=8,
+            available=False, category=self.snacks,
+        )
+        Product.objects.create(
+            code='TMP101', name='Categoría inactiva', price=1000, stock=8,
+            category=inactive_category,
+        )
+
+    def test_catalog_shows_only_available_products_in_active_categories(self):
+        response = self.client.get(reverse('client_dashboard'))
+        names = {product.name for product in response.context['products']}
+        self.assertSetEqual(names, {'Espresso', 'Jugo agotado', 'Brownie'})
+
+    def test_catalog_searches_by_product_name(self):
+        response = self.client.get(reverse('client_dashboard'), {'q': 'espresso'})
+        names = {product.name for product in response.context['products']}
+        self.assertSetEqual(names, {'Espresso'})
+
+    def test_catalog_filters_by_category(self):
+        response = self.client.get(
+            reverse('client_dashboard'),
+            {'category': str(self.snacks.pk)},
+        )
+        names = {product.name for product in response.context['products']}
+        self.assertSetEqual(names, {'Brownie'})
+
+    def test_catalog_formats_prices_and_disables_sold_out_products(self):
+        response = self.client.get(reverse('client_dashboard'))
+        self.assertContains(response, '$1.500')
+        self.assertContains(response, 'Agotado')
+        self.assertNotContains(
+            response,
+            reverse('add_to_cart', args=[self.sold_out.pk]),
+        )
+
+    def test_sold_out_product_cannot_be_added_by_direct_post(self):
+        response = self.client.post(reverse('add_to_cart', args=[self.sold_out.pk]))
+        self.assertRedirects(response, reverse('client_dashboard'))
+        self.assertNotIn(str(self.sold_out.pk), self.client.session.get('cart', {}))
+
+    def test_cart_quantity_cannot_exceed_available_stock(self):
+        add_url = reverse('add_to_cart', args=[self.in_stock.pk])
+        for _ in range(self.in_stock.stock):
+            self.client.post(add_url)
+
+        response = self.client.post(add_url, follow=True)
+        cart = self.client.session['cart']
+        self.assertEqual(cart[str(self.in_stock.pk)], self.in_stock.stock)
+        self.assertContains(response, 'No puedes agregar más unidades')
+        self.assertContains(response, f'Carrito')
