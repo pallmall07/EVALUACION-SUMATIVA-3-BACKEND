@@ -28,6 +28,20 @@ class Product(models.Model):
         return self.name
 
 class Order(models.Model):
+    STATUS_PENDING = 'Pendiente'
+    STATUS_PREPARING = 'En preparación'
+    STATUS_READY = 'Listo'
+    STATUS_DELIVERED = 'Entregado'
+    STATUS_CANCELLED = 'Cancelado'
+    STATUS_FLOW = (STATUS_PENDING, STATUS_PREPARING, STATUS_READY, STATUS_DELIVERED)
+    STATUS_CHOICES = (
+        (STATUS_PENDING, STATUS_PENDING),
+        (STATUS_PREPARING, STATUS_PREPARING),
+        (STATUS_READY, STATUS_READY),
+        (STATUS_DELIVERED, STATUS_DELIVERED),
+        (STATUS_CANCELLED, STATUS_CANCELLED),
+    )
+
     customer = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -36,7 +50,12 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, db_column='fecha')
     pickup_time = models.TimeField(db_column='hora_retiro')
-    status = models.CharField(max_length=15, default='pendiente', db_column='estado')
+    status = models.CharField(
+        max_length=15,
+        choices=STATUS_CHOICES,
+        default=STATUS_PENDING,
+        db_column='estado',
+    )
     total_price = models.IntegerField(db_column='total')
     observation = models.TextField(blank=True, db_column='observacion')
 

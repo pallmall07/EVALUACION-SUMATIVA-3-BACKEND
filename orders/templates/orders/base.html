@@ -15,8 +15,10 @@
                 <a href="{% url 'home' %}">Inicio</a>
                 {% if user.is_staff %}
                     <a href="{% url 'admin:index' %}">Administración</a>
+                    <a href="{% url 'staff_orders' %}">Pedidos</a>
                 {% else %}
                     <a class="cart-count" href="{% url 'cart' %}">Carrito <strong>{{ cart_count|default:0 }}</strong></a>
+                    <a href="{% url 'client_order_history' %}">Mis pedidos</a>
                 {% endif %}
                 <div class="identity" aria-label="Usuario conectado">
                     <span class="username">{{ user.username }}</span>

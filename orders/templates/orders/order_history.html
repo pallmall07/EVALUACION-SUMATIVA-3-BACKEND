@@ -1,0 +1,28 @@
+{% extends "orders/base.html" %}
+{% load clp %}
+
+{% block title %}Mis pedidos | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="catalog-page">
+    <p class="eyebrow">CAFETERÍA FIORES · CLIENTE</p>
+    <h1>Mis pedidos</h1>
+    {% if orders %}
+        <div class="product-grid">
+            {% for order in orders %}
+                <article class="product-item order-card">
+                    <div class="product-copy">
+                        <p class="product-category">Pedido #{{ order.pk }} · {{ order.created_at|date:'d/m/Y H:i' }}</p>
+                        <h2>{{ order.status }}</h2>
+                        <p>Retiro: {{ order.pickup_time|time:'H:i' }}</p>
+                        <p class="product-price">{{ order.total_price|clp }}</p>
+                    </div>
+                    <a class="secondary-button" href="{% url 'client_order_detail' order.pk %}">Ver detalle</a>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-catalog">Aún no tienes pedidos.</p>
+    {% endif %}
+</section>
+{% endblock %}

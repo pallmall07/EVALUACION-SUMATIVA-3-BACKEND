@@ -2,31 +2,13 @@
 
 ## 13 de noviembre de 2026
 
-| Solicitud | Resultado de la IA | Decisión |
+| Qué pedí | Qué recibí | Qué hice |
 | --- | --- | --- |
-| Proponer requerimientos funcionales iniciales para la aplicación. | Lista de propuestas para usuarios, productos, pedidos, retiro, administración y persistencia SQL. | Se usó como orientación; los requerimientos de la evaluación tienen prioridad. |
-| Apoyar el requerimiento RF-01 de modelos, administración y datos de prueba. | Ejemplos iniciales de modelos Django, configuración del Admin y carga de datos. | Se revisó contra el código. Se corrigió el comando de prueba porque solo contenía cuatro productos y no asignaba la descripción obligatoria. |
-| Añadir `BITACORA_IA.md` y documentar cómo ejecutar el proyecto y las cuentas de prueba en `README.md`. | Borradores de ambos documentos. | Se corrigieron para coincidir con la estructura y configuración reales del proyecto; se reemplazaron los pasos de fixtures por el comando de gestión existente. |
-| Usar el modelo de datos proporcionado por el profesor y continuar con RF-02. | Ajuste de columnas, tipos, relaciones y restricción única de `DetallePedido`; autenticación por `User.is_staff`, paneles separados y expiración de sesión. | Aceptado, con migración para conservar los registros y pruebas de acceso por rol. |
-| Implementar RF-03 para el catálogo de clientes. | Catálogo con búsqueda, filtro de categoría activa, precios CLP y control de stock al agregar al carrito. | Aceptado; se distingue un producto agotado (`stock=0`, disponible) de uno no disponible, y se valida el stock también en el servidor. |
-| Preparar avances para GitHub. | Revisión del estado Git y publicación de los cambios validados. | Se eligió un repositorio público, se excluyó el entorno virtual y se publicaron los avances RF-01, RF-02 y RF-03. |
-| Orientar y completar los formularios iniciales de RF-04 en `orders/forms.py`. | Se añadieron `CategoryForm` y `ProductForm` con validación del código, precio y stock, conservando el `OrderForm` existente. | El usuario confirmó autorización para usar IA. Se validaron entradas válidas e inválidas; el CRUD en vistas y plantillas sigue pendiente. |
-| Implementar el flujo de carrito y confirmación de pedido. | Carrito de sesión con límite de 10 unidades, edición y eliminación; validación de retiro; confirmación transaccional con verificación de stock. | Se aceptó la solución simple. Las pruebas verifican que un fallo de stock no cree pedidos ni descuente parcialmente el inventario. |
-
-## Cambios aceptados en este avance
-
-- Se incorporó el comando de carga con cuatro categorías, veinte productos y tres usuarios de demostración.
-- Se añadió la migración inicial de los modelos.
-- Se añadieron instrucciones de instalación y ejecución, dependencias y reglas de exclusión para Git.
-- Las credenciales de demostración se documentan explícitamente como locales y no aptas para producción.
-- Se quitó de las rutas una inclusión a `orders.urls`, que no existe todavía y bloqueaba los comandos de Django.
-- Se alineó el esquema con el diagrama del profesor y se añadieron migraciones de datos para completar los códigos de productos existentes.
-- Se implementaron login/logout, permisos exclusivos por `is_staff`, menú con nombre y rol, y sesión de 30 minutos por inactividad.
-- Se incorporó el catálogo de clientes con búsqueda, filtro por categoría activa, precios CLP y bloqueo de productos agotados tanto en pantalla como en el endpoint.
-- Se añadieron los formularios de categoría y producto para comenzar RF-04, con sus validaciones de código, precio y stock.
-- Se incorporaron operaciones de carrito, hora y observación de retiro, creación de pedido y detalles, descuento de stock y vaciado tras confirmación exitosa.
-
-## Elementos descartados o pendientes
-
-- Se descartó asumir que los ejemplos iniciales de la IA ya estaban aplicados al repositorio.
-- Falta conectar los formularios de RF-04 a las vistas, rutas y plantillas de gestión del encargado.
+| Requerimientos iniciales | Ideas para usuarios, productos y pedidos. | Las usé solo como orientación; prevalece la pauta. |
+| RF-01: modelos, Admin y datos de prueba | Ejemplos de modelos y carga de datos. | Corregí el cargador para cumplir los campos y cantidades requeridos. |
+| README y bitácora | Borradores de documentación. | Los adapté a los comandos y archivos reales del proyecto. |
+| RF-02 y modelo del profesor | Cambios de esquema, autenticación y roles. | Alineé los modelos con el diagrama y probé los permisos. |
+| RF-03: catálogo | Búsqueda, filtros, precios CLP y control de stock. | Implementé y probé el catálogo; un agotado se muestra sin opción de agregar. |
+| RF-04: formularios | Formularios de categoría y producto con validaciones. | Acepté los formularios; la gestión completa del catálogo sigue pendiente. |
+| Carrito y confirmación | Edición del carrito, horario de retiro y creación del pedido con revisión de stock. | Implementé el flujo y probé que un error de stock no cree pedidos parciales. |
+| Publicación en GitHub | Revisión y publicación de los avances. | Publiqué los cambios en cinco commits. |

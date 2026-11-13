@@ -1,0 +1,51 @@
+{% extends "orders/base.html" %}
+{% load clp %}
+
+{% block title %}Pedidos del día | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="catalog-page">
+    <p class="eyebrow">ENCARGADO · {{ today|date:'d/m/Y' }}</p>
+    <h1>Pedidos del día</h1>
+
+    <form class="catalog-filters" method="get">
+        <div class="filter-field">
+            <label for="status-filter">Estado</label>
+            <select id="status-filter" name="status">
+                <option value="">Todos</option>
+                {% for value, label in statuses %}
+                    <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="primary-button filter-button" type="submit">Filtrar</button>
+        <a class="clear-filter" href="{% url 'staff_orders' %}">Limpiar</a>
+    </form>
+
+    {% if orders %}
+        <div class="product-grid">
+            {% for order in orders %}
+                <article class="product-item staff-order-card">
+                    <div class="product-copy">
+                        <p class="product-category">Pedido #{{ order.pk }} · Retiro {{ order.pickup_time|time:'H:i' }}</p>
+                        <h2>{{ order.status }}</h2>
+                        <p>Cliente: {{ order.customer.username }}</p>
+                        {% for item in order.items.all %}
+                            <p>{{ item.quantity }} × {{ item.product.name }} · {{ item.subtotal|clp }}</p>
+                        {% endfor %}
+                        <p class="product-price">Total: {{ order.total_price|clp }}</p>
+                    </div>
+                    {% if order.status != 'Entregado' and order.status != 'Cancelado' %}
+                        <form action="{% url 'advance_order_status' order.pk %}" method="post">
+                            {% csrf_token %}
+                            <button class="add-button" type="submit">Avanzar estado</button>
+                        </form>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-catalog">No hay pedidos para este filtro.</p>
+    {% endif %}
+</section>
+{% endblock %}

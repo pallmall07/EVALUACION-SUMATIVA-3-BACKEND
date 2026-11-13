@@ -290,3 +290,79 @@ class CartAndCheckoutTest(TestCase):
             )
             self.assertFalse(Order.objects.exists())
             self.assertContains(response, 'entre las 08:00 y las 18:00')
+
+
+class OrderTrackingTest(TestCase):
+    def setUp(self):
+        self.customer = User.objects.create_user(username='cliente', password='test-pass-123')
+        self.other_customer = User.objects.create_user(username='otro', password='test-pass-123')
+        self.staff = User.objects.create_user(
+            username='encargado', password='test-pass-123', is_staff=True,
+        )
+        category = Category.objects.create(name='Bebidas')
+        self.product = Product.objects.create(
+            code='CAF-201', name='Espresso', price=1500, stock=8, category=category,
+        )
+        self.pending = self.create_order(self.customer, Order.STATUS_PENDING)
+        self.preparing = self.create_order(self.other_customer, Order.STATUS_PREPARING)
+
+    def create_order(self, customer, status):
+        order = Order.objects.create(
+            customer=customer,
+            pickup_time=time(11, 0),
+            status=status,
+            total_price=3000,
+        )
+        OrderItem.objects.create(
+            order=order,
+            product=self.product,
+            quantity=2,
+            unit_price=1500,
+            subtotal=3000,
+        )
+        return order
+
+    def test_customer_only_sees_and_opens_own_orders(self):
+        self.client.force_login(self.customer)
+        history = self.client.get(reverse('client_order_history'))
+        self.assertContains(history, f'Pedido #{self.pending.pk}')
+        self.assertNotContains(history, f'Pedido #{self.preparing.pk}')
+        self.assertEqual(
+            self.client.get(reverse('client_order_detail', args=[self.preparing.pk])).status_code,
+            404,
+        )
+        detail = self.client.get(reverse('client_order_detail', args=[self.pending.pk]))
+        self.assertContains(detail, 'Total: $3.000')
+
+    def test_cancelling_pending_order_restores_stock_only_once(self):
+        self.client.force_login(self.customer)
+        url = reverse('cancel_pending_order', args=[self.pending.pk])
+        self.client.post(url)
+        self.client.post(url)
+        self.product.refresh_from_db()
+        self.pending.refresh_from_db()
+        self.assertEqual(self.pending.status, Order.STATUS_CANCELLED)
+        self.assertEqual(self.product.stock, 10)
+
+    def test_staff_filters_today_and_advances_one_state_per_request(self):
+        self.client.force_login(self.staff)
+        response = self.client.get(reverse('staff_orders'), {'status': Order.STATUS_PENDING})
+        self.assertContains(response, f'Pedido #{self.pending.pk}')
+        self.assertNotContains(response, f'Pedido #{self.preparing.pk}')
+
+        url = reverse('advance_order_status', args=[self.pending.pk])
+        for expected in (
+            Order.STATUS_PREPARING,
+            Order.STATUS_READY,
+            Order.STATUS_DELIVERED,
+            Order.STATUS_DELIVERED,
+        ):
+            self.client.post(url, {'status': Order.STATUS_DELIVERED})
+            self.pending.refresh_from_db()
+            self.assertEqual(self.pending.status, expected)
+
+    def test_tracking_pages_are_restricted_by_role(self):
+        self.client.force_login(self.customer)
+        self.assertEqual(self.client.get(reverse('staff_orders')).status_code, 403)
+        self.client.force_login(self.staff)
+        self.assertEqual(self.client.get(reverse('client_order_history')).status_code, 403)

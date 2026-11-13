@@ -3,6 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
 from orders import auth_views
+from orders import order_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,21 @@ urlpatterns = [
     ),
     path('cliente/carrito/vaciar/', auth_views.clear_cart, name='clear_cart'),
     path('cliente/confirmar/', auth_views.checkout, name='checkout'),
+    path('cliente/pedidos/', order_views.client_order_history, name='client_order_history'),
+    path(
+        'cliente/pedidos/<int:order_id>/',
+        order_views.client_order_detail,
+        name='client_order_detail',
+    ),
+    path(
+        'cliente/pedidos/<int:order_id>/cancelar/',
+        order_views.cancel_pending_order,
+        name='cancel_pending_order',
+    ),
+    path('encargado/pedidos/', order_views.staff_order_list, name='staff_orders'),
+    path(
+        'encargado/pedidos/<int:order_id>/avanzar/',
+        order_views.advance_order_status,
+        name='advance_order_status',
+    ),
 ]

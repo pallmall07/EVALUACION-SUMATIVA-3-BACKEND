@@ -32,6 +32,8 @@ Abre `http://127.0.0.1:8000/login/` para iniciar sesión. La ruta raíz redirige
 
 El cliente puede editar y quitar productos, vaciar el carrito y confirmar un pedido con una hora de retiro entre 08:00 y 18:00, al menos 20 minutos después de la hora actual. La confirmación revisa todo el stock antes de crear pedido y detalles; si falta stock, no crea el pedido ni descuenta productos parcialmente.
 
+El cliente puede consultar su historial y detalle, y cancelar pedidos pendientes para reponer stock. El encargado puede revisar los pedidos del día por estado y avanzar cada pedido una etapa a la vez. El acceso a los pedidos de clientes está restringido por usuario.
+
 El encargado también puede entrar al panel de Django Admin desde el enlace del menú o en `http://127.0.0.1:8000/admin/`. Los clientes no pueden acceder a las rutas reservadas al encargado. El comando de datos de prueba se puede volver a ejecutar sin duplicar categorías ni productos.
 
 ## Usuarios de prueba

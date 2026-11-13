@@ -1,0 +1,35 @@
+{% extends "orders/base.html" %}
+{% load clp %}
+
+{% block title %}Pedido #{{ order.pk }} | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="catalog-page">
+    <p class="eyebrow">CAFETERÍA FIORES · PEDIDO #{{ order.pk }}</p>
+    <h1>{{ order.status }}</h1>
+    <p>Fecha: {{ order.created_at|date:'d/m/Y H:i' }}</p>
+    <p>Hora de retiro: {{ order.pickup_time|time:'H:i' }}</p>
+    {% if order.observation %}<p>Observación: {{ order.observation }}</p>{% endif %}
+
+    <div class="product-grid order-lines">
+        {% for item in order.items.all %}
+            <article class="product-item">
+                <div class="product-copy">
+                    <h2>{{ item.product.name }}</h2>
+                    <p>{{ item.quantity }} × {{ item.unit_price|clp }}</p>
+                </div>
+                <strong>{{ item.subtotal|clp }}</strong>
+            </article>
+        {% endfor %}
+    </div>
+    <p class="cart-total">Total: {{ order.total_price|clp }}</p>
+
+    {% if order.status == 'Pendiente' %}
+        <form action="{% url 'cancel_pending_order' order.pk %}" method="post">
+            {% csrf_token %}
+            <button class="remove-button" type="submit">Cancelar pedido</button>
+        </form>
+    {% endif %}
+    <p><a class="clear-filter" href="{% url 'client_order_history' %}">Volver a mis pedidos</a></p>
+</section>
+{% endblock %}
