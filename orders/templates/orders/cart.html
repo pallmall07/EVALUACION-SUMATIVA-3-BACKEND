@@ -1,0 +1,57 @@
+{% extends "orders/base.html" %}
+{% load clp %}
+
+{% block title %}Carrito | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="catalog-page">
+    <p class="eyebrow">CAFETERÍA FIORES · PEDIDO</p>
+    <h1>Tu carrito</h1>
+
+    {% if items %}
+        <div class="product-grid">
+            {% for item in items %}
+                <article class="product-item cart-item">
+                    <div class="product-copy">
+                        <p class="product-category">{% if item.product %}{{ item.product.category.name }} · {{ item.product.code }}{% else %}No disponible{% endif %}</p>
+                        <h2>{{ item.name }}</h2>
+                        <p class="product-price">Subtotal: {{ item.subtotal|clp }}</p>
+                        {% if not item.can_order %}
+                            <p class="cart-warning">No hay stock suficiente o el producto dejó de estar disponible.</p>
+                        {% endif %}
+                    </div>
+                    <div class="cart-actions">
+                        <form action="{% url 'update_cart' item.product_id %}" method="post" class="quantity-form">
+                            {% csrf_token %}
+                            <label for="quantity-{{ item.product_id }}">Cantidad</label>
+                            <input id="quantity-{{ item.product_id }}" type="number" name="quantity" min="0" max="10" value="{{ item.quantity }}" required>
+                            <button class="add-button" type="submit">Actualizar</button>
+                        </form>
+                        <form action="{% url 'remove_from_cart' item.product_id %}" method="post">
+                            {% csrf_token %}
+                            <button class="remove-button" type="submit">Quitar</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+            <p>Unidades: <strong>{{ cart_count }}</strong> / 10</p>
+            <p class="cart-total">Total: {{ cart_total|clp }}</p>
+            <div class="cart-summary-actions">
+                <form action="{% url 'clear_cart' %}" method="post">
+                    {% csrf_token %}
+                    <button class="remove-button" type="submit">Vaciar carrito</button>
+                </form>
+                {% if can_checkout %}
+                    <a class="secondary-button" href="{% url 'checkout' %}">Continuar</a>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <p class="empty-catalog">Tu carrito está vacío.</p>
+        <a class="secondary-button" href="{% url 'client_dashboard' %}">Volver al catálogo</a>
+    {% endif %}
+</section>
+{% endblock %}

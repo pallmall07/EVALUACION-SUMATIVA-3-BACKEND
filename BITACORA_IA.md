@@ -11,6 +11,7 @@
 | Implementar RF-03 para el catálogo de clientes. | Catálogo con búsqueda, filtro de categoría activa, precios CLP y control de stock al agregar al carrito. | Aceptado; se distingue un producto agotado (`stock=0`, disponible) de uno no disponible, y se valida el stock también en el servidor. |
 | Preparar avances para GitHub. | Revisión del estado Git y publicación de los cambios validados. | Se eligió un repositorio público, se excluyó el entorno virtual y se publicaron los avances RF-01, RF-02 y RF-03. |
 | Orientar y completar los formularios iniciales de RF-04 en `orders/forms.py`. | Se añadieron `CategoryForm` y `ProductForm` con validación del código, precio y stock, conservando el `OrderForm` existente. | El usuario confirmó autorización para usar IA. Se validaron entradas válidas e inválidas; el CRUD en vistas y plantillas sigue pendiente. |
+| Implementar el flujo de carrito y confirmación de pedido. | Carrito de sesión con límite de 10 unidades, edición y eliminación; validación de retiro; confirmación transaccional con verificación de stock. | Se aceptó la solución simple. Las pruebas verifican que un fallo de stock no cree pedidos ni descuente parcialmente el inventario. |
 
 ## Cambios aceptados en este avance
 
@@ -23,6 +24,7 @@
 - Se implementaron login/logout, permisos exclusivos por `is_staff`, menú con nombre y rol, y sesión de 30 minutos por inactividad.
 - Se incorporó el catálogo de clientes con búsqueda, filtro por categoría activa, precios CLP y bloqueo de productos agotados tanto en pantalla como en el endpoint.
 - Se añadieron los formularios de categoría y producto para comenzar RF-04, con sus validaciones de código, precio y stock.
+- Se incorporaron operaciones de carrito, hora y observación de retiro, creación de pedido y detalles, descuento de stock y vaciado tras confirmación exitosa.
 
 ## Elementos descartados o pendientes
 

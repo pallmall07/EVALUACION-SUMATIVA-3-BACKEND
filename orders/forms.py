@@ -1,4 +1,7 @@
+from datetime import datetime, time, timedelta
+
 from django import forms
+from django.utils import timezone
 
 from .models import Category, Product
 
@@ -39,6 +42,30 @@ class ProductForm(forms.ModelForm):
 	class Meta:
 		model = Product
 		fields = ('code', 'name', 'price', 'stock', 'available', 'category')
+
+
+class OrderConfirmationForm(forms.Form):
+	pickup_time = forms.TimeField(
+		label='Hora de retiro',
+		input_formats=('%H:%M',),
+		widget=forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+	)
+	observation = forms.CharField(
+		label='Observación',
+		required=False,
+		widget=forms.Textarea(attrs={'rows': 3}),
+	)
+
+	def clean_pickup_time(self):
+		pickup_time = self.cleaned_data['pickup_time']
+		if not time(8, 0) <= pickup_time <= time(18, 0):
+			raise forms.ValidationError('El retiro debe ser entre las 08:00 y las 18:00.')
+
+		now = timezone.localtime()
+		pickup_datetime = timezone.make_aware(datetime.combine(now.date(), pickup_time))
+		if pickup_datetime < now + timedelta(minutes=20):
+			raise forms.ValidationError('El retiro debe ser al menos 20 minutos después de ahora.')
+		return pickup_time
 
 
 class OrderForm(forms.Form):

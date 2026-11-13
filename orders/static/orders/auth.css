@@ -359,6 +359,132 @@ h1 {
     color: var(--muted);
 }
 
+.cart-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 10px;
+}
+
+.quantity-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 8px;
+}
+
+.quantity-form label {
+    width: 100%;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.quantity-form input {
+    width: 72px;
+    min-height: 40px;
+    border: 1px solid #aeb9af;
+    border-radius: 4px;
+    padding: 8px;
+    font: inherit;
+}
+
+.remove-button {
+    min-height: 40px;
+    border: 1px solid #bd563d;
+    border-radius: 4px;
+    padding: 8px 11px;
+    color: #8d2f24;
+    background: transparent;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.remove-button:hover,
+.remove-button:focus-visible {
+    color: #fff;
+    background: #9c412e;
+}
+
+.cart-warning {
+    margin: 8px 0 0;
+    color: #8d2f24;
+    font-size: 14px;
+}
+
+.cart-summary {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+}
+
+.cart-summary > p {
+    margin: 0 0 12px;
+}
+
+.cart-total {
+    color: var(--forest);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.cart-summary-actions,
+.checkout-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.cart-summary-actions form {
+    margin: 0;
+}
+
+.checkout-summary,
+.checkout-form {
+    max-width: 720px;
+}
+
+.checkout-summary {
+    margin-bottom: 26px;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 10px 0;
+}
+
+.checkout-form {
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+}
+
+.checkout-form textarea,
+.checkout-form input {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid #aeb9af;
+    border-radius: 4px;
+    padding: 10px 12px;
+    font: inherit;
+}
+
+.checkout-form textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.checkout-form small {
+    color: var(--muted);
+    line-height: 1.5;
+}
+
 .dashboard-intro {
     max-width: 760px;
     margin: 72px auto;

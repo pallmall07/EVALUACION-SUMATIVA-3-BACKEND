@@ -16,4 +16,17 @@ urlpatterns = [
         auth_views.add_to_cart,
         name='add_to_cart',
     ),
+    path('cliente/carrito/', auth_views.cart_view, name='cart'),
+    path(
+        'cliente/carrito/actualizar/<int:product_id>/',
+        auth_views.update_cart,
+        name='update_cart',
+    ),
+    path(
+        'cliente/carrito/quitar/<int:product_id>/',
+        auth_views.remove_from_cart,
+        name='remove_from_cart',
+    ),
+    path('cliente/carrito/vaciar/', auth_views.clear_cart, name='clear_cart'),
+    path('cliente/confirmar/', auth_views.checkout, name='checkout'),
 ]

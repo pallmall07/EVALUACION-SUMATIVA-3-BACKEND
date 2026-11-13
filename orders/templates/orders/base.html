@@ -16,7 +16,7 @@
                 {% if user.is_staff %}
                     <a href="{% url 'admin:index' %}">Administración</a>
                 {% else %}
-                    <span class="cart-count">Carrito <strong>{{ cart_count|default:0 }}</strong></span>
+                    <a class="cart-count" href="{% url 'cart' %}">Carrito <strong>{{ cart_count|default:0 }}</strong></a>
                 {% endif %}
                 <div class="identity" aria-label="Usuario conectado">
                     <span class="username">{{ user.username }}</span>

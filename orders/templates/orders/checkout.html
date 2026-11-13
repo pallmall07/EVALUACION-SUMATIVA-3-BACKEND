@@ -1,0 +1,43 @@
+{% extends "orders/base.html" %}
+{% load clp %}
+
+{% block title %}Confirmar pedido | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="catalog-page checkout-page">
+    <p class="eyebrow">CAFETERÍA FIORES · RETIRO</p>
+    <h1>Confirmar pedido</h1>
+
+    <div class="checkout-summary">
+        {% for item in items %}
+            <div class="summary-line">
+                <span>{{ item.quantity }} × {{ item.name }}</span>
+                <strong>{{ item.subtotal|clp }}</strong>
+            </div>
+            {% if not item.can_order %}
+                <p class="cart-warning">{{ item.name }} no tiene stock suficiente o ya no está disponible.</p>
+            {% endif %}
+        {% endfor %}
+        <p class="cart-total">Total: {{ cart_total|clp }}</p>
+    </div>
+
+    <form class="checkout-form" method="post">
+        {% csrf_token %}
+        <div class="form-field">
+            <label for="{{ form.pickup_time.id_for_label }}">{{ form.pickup_time.label }}</label>
+            {{ form.pickup_time }}
+            <small>Horario de retiro: 08:00 a 18:00. Debe ser con al menos 20 minutos de anticipación.</small>
+            {% for error in form.pickup_time.errors %}<p class="field-error" role="alert">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.observation.id_for_label }}">{{ form.observation.label }}</label>
+            {{ form.observation }}
+            {% for error in form.observation.errors %}<p class="field-error" role="alert">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="checkout-actions">
+            <a class="clear-filter" href="{% url 'cart' %}">Volver al carrito</a>
+            <button class="primary-button filter-button" type="submit">Confirmar pedido</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
