@@ -1,6 +1,14 @@
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
+
+from orders import auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('', auth_views.home, name='home'),
+    path('encargado/', auth_views.staff_dashboard, name='staff_dashboard'),
+    path('cliente/', auth_views.client_dashboard, name='client_dashboard'),
 ]

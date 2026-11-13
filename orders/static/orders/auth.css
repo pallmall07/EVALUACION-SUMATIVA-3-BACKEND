@@ -1,0 +1,231 @@
+:root {
+    color-scheme: light;
+    --forest: #183f35;
+    --forest-light: #2f6654;
+    --paper: #f3f4ed;
+    --surface: #fffefa;
+    --ink: #22332d;
+    --muted: #64736b;
+    --line: #d7ddd4;
+    --clay: #bd563d;
+    --clay-dark: #9c412e;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image: repeating-linear-gradient(135deg, rgb(24 63 53 / 3%) 0, rgb(24 63 53 / 3%) 1px, transparent 1px, transparent 18px);
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.topbar {
+    display: flex;
+    min-height: 76px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 14px max(24px, calc((100vw - 1120px) / 2));
+    color: var(--surface);
+    background: var(--forest);
+}
+
+.brand {
+    color: var(--surface);
+    font-family: Georgia, "Palatino Linotype", serif;
+    font-size: 23px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.brand span {
+    color: #e5a181;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.menu > a,
+.logout {
+    color: var(--surface);
+    font: inherit;
+    text-decoration: none;
+}
+
+.menu > a:hover,
+.menu > a:focus-visible {
+    color: #f2bf9e;
+}
+
+.identity {
+    display: grid;
+    gap: 2px;
+    border-left: 1px solid rgb(255 255 255 / 28%);
+    padding-left: 18px;
+}
+
+.username {
+    font-weight: 700;
+}
+
+.role {
+    color: #d7e3dc;
+    font-size: 13px;
+}
+
+.logout {
+    border: 1px solid rgb(255 255 255 / 55%);
+    border-radius: 4px;
+    padding: 9px 12px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.logout:hover,
+.logout:focus-visible {
+    background: var(--forest-light);
+}
+
+.auth-panel {
+    width: min(100% - 32px, 430px);
+    margin: 72px auto;
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--clay);
+    border-radius: 5px;
+    padding: 32px;
+    background: var(--surface);
+    box-shadow: 0 16px 38px rgb(34 51 45 / 8%);
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+    color: var(--forest-light);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+h1 {
+    margin: 0 0 24px;
+    color: var(--forest);
+    font-family: Georgia, "Palatino Linotype", serif;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.form-field {
+    display: grid;
+    gap: 8px;
+    margin: 18px 0;
+}
+
+.form-field label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.form-field input {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid #aeb9af;
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: var(--ink);
+    background: #fff;
+    font: inherit;
+}
+
+.form-field input:focus-visible {
+    outline: 3px solid rgb(47 102 84 / 22%);
+    border-color: var(--forest-light);
+}
+
+.primary-button,
+.secondary-button {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 4px;
+    padding: 10px 16px;
+    color: #fff;
+    background: var(--clay);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.primary-button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.primary-button:focus-visible,
+.secondary-button:focus-visible {
+    background: var(--clay-dark);
+}
+
+.error-message,
+.field-error {
+    color: #8d2f24;
+    font-size: 14px;
+}
+
+.dashboard-intro {
+    max-width: 760px;
+    margin: 72px auto;
+    border-left: 4px solid var(--clay);
+    padding: 8px 0 8px 28px;
+}
+
+.dashboard-intro h1 {
+    margin-bottom: 12px;
+}
+
+.dashboard-intro > p:not(.eyebrow) {
+    margin: 0 0 24px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+@media (max-width: 680px) {
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        padding: 18px 20px;
+    }
+
+    .menu {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 14px;
+    }
+
+    .identity {
+        padding-left: 12px;
+    }
+
+    .auth-panel {
+        margin: 36px auto;
+        padding: 24px;
+    }
+
+    .dashboard-intro {
+        margin: 42px 20px;
+        padding-left: 20px;
+    }
+}

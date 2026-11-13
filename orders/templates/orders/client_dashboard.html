@@ -1,0 +1,11 @@
+{% extends "orders/base.html" %}
+
+{% block title %}Panel cliente | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="dashboard-intro">
+    <p class="eyebrow">ÁREA DE CLIENTE</p>
+    <h1>Hola, {{ user.first_name|default:user.username }}</h1>
+    <p>Tu cuenta tiene permisos de cliente.</p>
+</section>
+{% endblock %}

@@ -29,7 +29,9 @@ python manage.py load_test_data
 python manage.py runserver
 ```
 
-Abre `http://127.0.0.1:8000/admin/` para acceder al panel de administración. El comando de datos de prueba se puede volver a ejecutar sin duplicar categorías ni productos.
+Abre `http://127.0.0.1:8000/login/` para iniciar sesión. La ruta raíz redirige al panel correspondiente al rol; el menú muestra el usuario conectado y su rol. La sesión expira tras 30 minutos de inactividad.
+
+El encargado también puede entrar al panel de Django Admin desde el enlace del menú o en `http://127.0.0.1:8000/admin/`. Los clientes no pueden acceder a las rutas reservadas al encargado. El comando de datos de prueba se puede volver a ejecutar sin duplicar categorías ni productos.
 
 ## Usuarios de prueba
 

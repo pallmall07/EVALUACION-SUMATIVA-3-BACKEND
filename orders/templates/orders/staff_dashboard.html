@@ -1,0 +1,12 @@
+{% extends "orders/base.html" %}
+
+{% block title %}Panel encargado | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="dashboard-intro">
+    <p class="eyebrow">ÁREA DE ENCARGADO</p>
+    <h1>Bienvenido, {{ user.first_name|default:user.username }}</h1>
+    <p>Tu cuenta tiene permisos de encargado.</p>
+    <a class="secondary-button" href="{% url 'admin:index' %}">Abrir administración</a>
+</section>
+{% endblock %}

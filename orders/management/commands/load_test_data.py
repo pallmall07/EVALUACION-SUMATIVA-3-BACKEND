@@ -7,37 +7,46 @@ class Command(BaseCommand):
     help = 'Load test data into the database'
 
     def handle(self, *args, **kwargs):
-        categories = {
-            name: Category.objects.get_or_create(name=name)[0]
-            for name in ['Bebidas', 'Snacks', 'Sandwiches', 'Postres']
+        category_data = {
+            'Bebidas': 'Bebidas calientes y frías.',
+            'Snacks': 'Colaciones y productos individuales.',
+            'Sandwiches': 'Preparaciones saladas para llevar.',
+            'Postres': 'Dulces y preparaciones de repostería.',
         }
+        categories = {}
+        for name, description in category_data.items():
+            categories[name], _ = Category.objects.update_or_create(
+                name=name,
+                defaults={'description': description, 'active': True},
+            )
+
         products = [
-            ('Espresso', 'Café espresso recién preparado.', 1200, 20, True, 'Bebidas'),
-            ('Americano', 'Café espresso diluido con agua caliente.', 1400, 20, True, 'Bebidas'),
-            ('Capuccino', 'Café con leche vaporizada y espuma.', 1800, 15, True, 'Bebidas'),
-            ('Latte', 'Café espresso con leche vaporizada.', 1900, 15, True, 'Bebidas'),
-            ('Té negro', 'Té negro servido caliente.', 1100, 12, True, 'Bebidas'),
-            ('Té chai', 'Té especiado con leche.', 1700, 10, True, 'Bebidas'),
-            ('Chocolate caliente', 'Chocolate preparado con leche.', 1800, 10, True, 'Bebidas'),
-            ('Jugo de naranja', 'Jugo de naranja en botella.', 1600, 0, False, 'Bebidas'),
-            ('Galleta de avena', 'Galleta horneada de avena.', 700, 25, True, 'Snacks'),
-            ('Brownie', 'Brownie de chocolate.', 1200, 16, True, 'Snacks'),
-            ('Muffin de arándano', 'Muffin individual con arándanos.', 1300, 12, True, 'Snacks'),
-            ('Empanada de queso', 'Empanada horneada rellena de queso.', 1500, 0, False, 'Snacks'),
-            ('Barra de cereal', 'Barra de cereal y frutos secos.', 900, 18, True, 'Snacks'),
-            ('Sandwich jamón queso', 'Pan, jamón y queso.', 2500, 15, True, 'Sandwiches'),
-            ('Sandwich pollo palta', 'Pan con pollo y palta.', 3200, 12, True, 'Sandwiches'),
-            ('Sandwich vegetariano', 'Pan con verduras frescas y queso.', 2800, 10, True, 'Sandwiches'),
-            ('Sandwich ave mayo', 'Pan con ave y mayonesa.', 2900, 10, True, 'Sandwiches'),
-            ('Sandwich de atún', 'Pan con atún y verduras.', 3000, 8, True, 'Sandwiches'),
-            ('Sandwich queso tomate', 'Pan con queso y tomate.', 2400, 10, True, 'Sandwiches'),
-            ('Kuchen de manzana', 'Porción de kuchen rellena de manzana.', 1800, 8, True, 'Postres'),
+            ('BEB001', 'Espresso', 1200, 20, True, 'Bebidas'),
+            ('BEB002', 'Americano', 1400, 20, True, 'Bebidas'),
+            ('BEB003', 'Capuccino', 1800, 15, True, 'Bebidas'),
+            ('BEB004', 'Latte', 1900, 15, True, 'Bebidas'),
+            ('BEB005', 'Té negro', 1100, 12, True, 'Bebidas'),
+            ('BEB006', 'Té chai', 1700, 10, True, 'Bebidas'),
+            ('BEB007', 'Chocolate caliente', 1800, 10, True, 'Bebidas'),
+            ('BEB008', 'Jugo de naranja', 1600, 0, False, 'Bebidas'),
+            ('SNK001', 'Galleta de avena', 700, 25, True, 'Snacks'),
+            ('SNK002', 'Brownie', 1200, 16, True, 'Snacks'),
+            ('SNK003', 'Muffin de arándano', 1300, 12, True, 'Snacks'),
+            ('SNK004', 'Empanada de queso', 1500, 0, False, 'Snacks'),
+            ('SNK005', 'Barra de cereal', 900, 18, True, 'Snacks'),
+            ('SAN001', 'Sandwich jamón queso', 2500, 15, True, 'Sandwiches'),
+            ('SAN002', 'Sandwich pollo palta', 3200, 12, True, 'Sandwiches'),
+            ('SAN003', 'Sandwich vegetariano', 2800, 10, True, 'Sandwiches'),
+            ('SAN004', 'Sandwich ave mayo', 2900, 10, True, 'Sandwiches'),
+            ('SAN005', 'Sandwich de atún', 3000, 8, True, 'Sandwiches'),
+            ('SAN006', 'Sandwich queso tomate', 2400, 10, True, 'Sandwiches'),
+            ('POS001', 'Kuchen de manzana', 1800, 8, True, 'Postres'),
         ]
-        for name, description, price, stock, available, category_name in products:
-            Product.objects.get_or_create(
+        for code, name, price, stock, available, category_name in products:
+            Product.objects.update_or_create(
                 name=name,
                 defaults={
-                    'description': description,
+                    'code': code,
                     'price': price,
                     'stock': stock,
                     'available': available,

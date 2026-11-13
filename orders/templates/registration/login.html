@@ -1,0 +1,28 @@
+{% extends "orders/base.html" %}
+
+{% block title %}Iniciar sesión | Cafetería Fiores{% endblock %}
+
+{% block content %}
+<section class="auth-panel" aria-labelledby="login-title">
+    <p class="eyebrow">CAFETERÍA FIORES · ACCESO</p>
+    <h1 id="login-title">Iniciar sesión</h1>
+    {% if form.non_field_errors %}
+        <div class="error-message" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="form-field">
+            <label for="{{ form.username.id_for_label }}">Usuario</label>
+            {{ form.username }}
+            {% if form.username.errors %}<div class="field-error" role="alert">{{ form.username.errors }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.password.id_for_label }}">Contraseña</label>
+            {{ form.password }}
+            {% if form.password.errors %}<div class="field-error" role="alert">{{ form.password.errors }}</div>{% endif %}
+        </div>
+        <button class="primary-button" type="submit">Ingresar</button>
+    </form>
+</section>
+{% endblock %}
